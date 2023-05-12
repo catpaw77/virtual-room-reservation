@@ -1,0 +1,135 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+My Meeting
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+        aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('Home') }}">Roomie</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a href="{{ url_for('Home') }}">Home</a></li>
+        <li><a href="{{ url_for('Book_Room') }}">Book Room</a></li>
+        <li class="active"><a href="{{ url_for('My_Meeting') }}">My Meeting</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{ url_for('My_Meeting') }}">{{current_user.username}}</a></li>
+        <li><a href="{{ url_for('logout') }}">logout</a></li>
+      </ul>
+    </div>
+    <!--/.nav-collapse -->
+  </div>
+</nav>
+
+<!-- flask 顯示 -->
+{% for message in get_flashed_messages(with_categories=True) %}
+<div class="alert alert-{{ message[0] }}">
+  <!-- 弄一個x的button，點擊之後讓訊息消失，可參考bootstrap說明 -->
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  {{ message[1]}}
+</div>
+{% endfor %}
+
+<br></br>
+ 
+<!-- 若會議為空，顯示沒有會議；否則以表格依序列會議 -->
+<div class="container">
+  {% block checkempty %}
+  {% if meetings %}
+  <table class="table table-striped table-hover"><!--  border="" -->
+    <thead>
+      <tr>
+        <th>Dates</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Room</th>
+        <th>Meeting Name</th>
+        <th>Description</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for meeting in meetings %}
+      <tr>
+        <td>{{ meeting.date }}</td>
+        <td>{{ meeting.start_time }}</td>
+        <td>{{ meeting.end_time }}</td>
+        <td>{{ meeting.room }}</td>
+        <td>{{ meeting.meeting_name }}</td>
+        <td>{{ meeting.description }}</td>
+        <td>
+          {% if current_user.username==meeting.host %}
+          <form action="" method="POST"><button class="btn btn-primary" type="submit" name="edit"
+              value="{{  meeting.id  }}"><span class="glyphicon glyphicon-pencil"></span> Edit </button> </form>
+          <!--<form action="{{url_for('My_Meeting')}}" method="POST"><input id="edit" name="edit" type="hidden"
+              value="{{  meeting.id  }}"><button type="summit">Edit</button> </form>-->
+          {% endif %}
+        </td>
+        <!--https://www.796t.com/post/YWgyazY=.html-->
+        <td>
+          {% if current_user.username==meeting.host %}
+          <form action="" method="POST"><button class="btn btn-danger" type="submit" name="delete"
+              value="{{  meeting.id  }}"><span class="glyphicon glyphicon-trash"></span> Delete</button> </form>
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+  {% else %}
+  <div>沒有會議</div>
+  {% endif %}
+  {% endblock checkempty %}
+
+</div><!-- /.container -->
+
+{% endblock %}
+
+
+<!--
+<h3>User: {{current_user.username}}，Page: My Meeting</h3>
+
+
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('Home')}}">Home</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('Book_Room')}}">Book Room</a>
+</li>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('My_Meeting')}}">My Meeting</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('logout')}}">登出系統</a>
+</li>-->
+
+<!-- 讀取後端資訊 flash()-->
+<!--<body>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </body>-->

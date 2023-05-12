@@ -1,0 +1,106 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Sign Up
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+				aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{{ url_for('welcome') }}">Roomie</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="{{ url_for('Login') }}">Login</a></li>
+				<li class="active"><a href="{{ url_for('Sign_Up') }}">Sign Up</a></li>
+			</ul>
+		</div>
+		<!--/.nav-collapse -->
+	</div>
+</nav>
+
+<!-- flask 顯示 -->
+{% for message in get_flashed_messages(with_categories=True) %}
+<div class="alert alert-{{ message[0] }}">
+	<!-- 弄一個x的button，點擊之後讓訊息消失，可參考bootstrap說明 -->
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+	{{ message[1]}}
+</div>
+{% endfor %}
+
+<br></br>
+ 
+<div class="container">
+
+	<form method="POST">
+		{{ form.hidden_tag() }}
+		<div class="form-group">
+			{{ form.email.label }}
+			{{ form.email(class_="form-control form-control-lg") }}
+		</div>
+		<div class="form-group">
+			{{form.username.label}}
+			{{form.username(class_="form-control form-control-lg") }}
+		</div>
+		<div class="form-group">
+			{{ form.password.label }}
+			{{ form.password(class_="form-control form-control-lg") }}
+		</div>
+		<div class="form-group">
+			{{ form.pass_confirm.label }}
+			{{ form.pass_confirm(class_="form-control form-control-lg") }}
+		</div>
+		{{form.submit(class_="btn btn-primary btn-lg")}}
+	</form>
+
+</div><!-- /.container -->
+{% endblock %}
+
+
+
+<!--<form method="POST">
+	{{ form.hidden_tag() }}
+	<div class="form-group">
+	{{ form.email.label }} 
+	{{ form.email(class_="form-control form-control-lg") }}
+	</div>
+	<div class="form-group">
+	{{form.username.label}} 
+	{{form.username(class_="form-control form-control-lg") }}
+	</div>
+	<div class="form-group">
+	{{ form.password.label }} 
+	{{ form.password(class_="form-control form-control-lg") }}
+	</div>
+	<div class="form-group">
+	{{ form.pass_confirm.label }} 
+	{{ form.pass_confirm(class_="form-control form-control-lg") }}
+	</div>
+	{{form.submit(class_="btn btn-primary btn-lg")}}
+	</form>-->
+
+<!-- 讀取後端資訊 flash()-->
+<!--<body>
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<ul class="flash">
+			{% for message in messages %}
+				<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		{% endwith %}
+	</body>-->
